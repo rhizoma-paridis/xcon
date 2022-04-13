@@ -11,9 +11,10 @@ public class ActiveServiceFactory {
     private final static ActiveMessageQueue queue = new ActiveMessageQueue();
 
     public static <T>  T active(T instance) {
-        Proxy.newProxyInstance(instance.getClass().getClassLoader(),
+        Object o = Proxy.newProxyInstance(instance.getClass().getClassLoader(),
                 instance.getClass().getInterfaces(),
                 new ActiveInvocationHandler(instance));
+        return (T) o;
     }
 
     private static class ActiveInvocationHandler<T> implements InvocationHandler {
@@ -37,6 +38,7 @@ public class ActiveServiceFactory {
                 // queue.offer(builder.build());
                 return result;
             }
+            return null;
         }
 
         private void checkMethod(Method method) {
